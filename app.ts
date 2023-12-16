@@ -3,7 +3,7 @@ type JWTType = { exp: number, aud: string, jti: string};
 
 const token = "eyJhsw5c...";
 const decoded = jwtDecode<JWTType>(token);
-
+//changed
 async function searchPets(name, type, gender) {
   const url = `https://api.petfinder.com/v2/animals/:id`;
   const response = await fetch(url);
