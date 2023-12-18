@@ -33,12 +33,12 @@ type AccessToken= {
     return token
   }
 
-  async function sendReq() {
+ export async function sendReq() {
     const clientId = '9ZeAJ8bq9iRpaN5vGoXr7WJYfEMUm0Ir5jsdfTZqrTKSFWuT1Q';
     const clientSecret = 'EKCklXdaxkyEmCh6KWlpffC5KXWUhD7oim88Hwls';
   
     const token = await getPetfinderAccessToken(clientId, clientSecret);
-   console.log(token)
+   return token
   }
   
- sendReq();
+ 
