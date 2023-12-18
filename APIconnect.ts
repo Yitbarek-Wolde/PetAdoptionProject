@@ -4,7 +4,7 @@ import fetch, { Response } from 'cross-fetch';
 type APIToken = {"token_type": string, "expires_in": number, "access_token": string 
   }
     
-type AccessToken= {
+export type AccessToken= {
         aud: string,
         jti: string,
         iat: number,

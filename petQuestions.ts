@@ -1,4 +1,7 @@
 import prompts from "prompts";
+import { sendReq, AccessToken } from "./APIconnect";
+import { LocalStorage } from "node-localstorage";
+
 async function getPets() {
 const userInput= await prompts ([
 {
@@ -33,4 +36,13 @@ console.log("?"+quaryParameter[0][0] + "="+ quaryParameter[0][1]+
 )
 }
 
-getPets();
+let localStorage = new LocalStorage("./scratch"); //scratch folder store it in that fold all files
+let access: AccessToken;
+let storeAccess;
+
+async function storeToLocal(){
+let c = await sendReq();
+ access = c
+ storeAccess = localStorage.setItem("access",JSON.stringify(access))
+}
+storeToLocal()
