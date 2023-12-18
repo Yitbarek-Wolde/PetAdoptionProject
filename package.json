@@ -6,7 +6,8 @@
   "scripts": {
     "test": "nodemon test.ts",
     "api": "nodemon APIconnect.ts",
-    "check": "nodemon check.ts"
+    "check": "nodemon check.ts",
+    "pet": "nodemon petQuestions.ts"
   },
   "author": "",
   "license": "ISC",
