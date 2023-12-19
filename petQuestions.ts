@@ -4,6 +4,16 @@ import { sendReq, AccessToken, APIToken } from "./APIconnect";
 import { LocalStorage } from "node-localstorage";
 import { Root, Animal, pet, base } from "./types";
 
+type st ={
+    type: string
+    named: string
+   breed: string
+    size:  string
+    age: string
+    color : string | undefined
+    Status: string
+
+}
 
 let localStorage = new LocalStorage("./scratch");
 async function getPets() {
@@ -96,24 +106,36 @@ async function fetchAnimalsById() {
     const head = {
         Authorization: `Bearer ${grant}`
     };
+ const response:Response = await fetch(a, { method: 'GET', headers: head })
+    const data:base = await response.json()
+    
 
-    const response:Response = await fetch(a, { method: 'GET', headers: head })
-    const data:pet = await response.json()
-  
-    localStorage.setItem('SelectedAnimal', JSON.stringify(data))
+   
+    let store: st[] = [];
+    store.push({
+      type: data.animal.type,
+      named: data.animal.name,
+      breed: data.animal.breeds.primary,
+      size: data.animal.size,
+      age: data.animal.age,
+      color: data.animal.colors.primary,
+      Status: data.animal.status,
+    });
+
+    localStorage.setItem('SelectedAnimal', JSON.stringify(store))
 }
 
 async function displayAnimal(){
    await fetchAnimalsById() 
-   let data:base = JSON.parse(localStorage.getItem("SelectedAnimal") || '{}')
-    console.log(`
-Here is your ${data.animal.type} details
-    Name : ${data.animal.name} 
-    Breed : ${data.animal.breeds.primary }
-    Size : ${data.animal.size }
-    Age : ${data.animal.age}
-    Color: ${data.animal.colors.primary }
-    Status : ${data.animal.status}`)
+   let dataf:st[] = JSON.parse(localStorage.getItem("SelectedAnimal") || '[]')
+    dataf.forEach(data=>console.log(`
+Here is your ${data.type} details
+    Name : ${data.named} 
+    Breed : ${data.breed }
+    Size : ${data.size }
+    Age : ${data.age}
+    Color: ${data.color }
+    Status : ${data.Status}`))
    
 }
 
