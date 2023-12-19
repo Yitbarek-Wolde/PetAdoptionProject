@@ -1,6 +1,6 @@
 import prompts from "prompts";
 import fetch, { Response } from 'cross-fetch';
-import { sendReq, AccessToken, APIToken } from "./APIconnect";
+import { sendReq} from "./APIconnect";
 import { LocalStorage } from "node-localstorage";
 import { Root, Animal, pet, base, BookType, BookTypeObject, st, forKey } from "./types";
 
@@ -33,7 +33,7 @@ async function getPets() {
         }
     ])
 
-    const quaryParameter = Object.entries(userInput)
+    const quaryParameter:[string, string][] = Object.entries(userInput)
     let withName = "?" + quaryParameter[0][0] + "=" + quaryParameter[0][1] +
         "&" + quaryParameter[1][0] + "=" + quaryParameter[1][1] + "&" + quaryParameter[2][0] + "=" + quaryParameter[2][1]
 
@@ -68,7 +68,7 @@ async function fetchAnimals() {
 
 async function getPetsById() {
     await fetchAnimals()
-    let choice = JSON.parse(localStorage.getItem("tempo") || "[]")
+    let choice: {[id:string]:string}[] = JSON.parse(localStorage.getItem("tempo") || "[]")
     const choices = choice.map((item: forKey) => {
         const key = Object.keys(item)[0];
         return { title: item[key], value: parseInt(key) }
@@ -80,9 +80,9 @@ async function getPetsById() {
             message: "select animal type",
             choices,
         }])
-    const quaryParameter = Object.entries(userInput)
+    const quaryParameter:[string, number][]  = Object.entries(userInput)
     let quary: number = quaryParameter[0][1]
-    //  console.log(quaryParameter)
+   
     return quary
 }
 

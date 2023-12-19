@@ -1,23 +1,10 @@
 import { jwtDecode } from "jwt-decode";
 import fetch, { Response } from 'cross-fetch';
 import { LocalStorage } from "node-localstorage";
+import { APIToken, JWTType} from "./types";
 
-export type APIToken = {
-    "token_type": string, "expires_in": number, "access_token": string
-}
 
-export type AccessToken = {
-    aud: string,
-    jti: string,
-    iat: number,
-    nbf: number,
-    exp: number,
-    sub: string,
-    scopes: []
 
-}
-
-type JWTType = { exp: number, aud: string, jti: string };
 
 async function getPetfinderAccessToken(clientId: string, clientSecret: string) {
     const url = 'https://api.petfinder.com/v2/oauth2/token';

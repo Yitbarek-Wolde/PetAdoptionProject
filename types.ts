@@ -29,7 +29,7 @@ export type Root = {
     tertiary: any
   }
   
-  export type BookType = BookTypeObject[]
+export type BookType = BookTypeObject[]
 
 export interface BookTypeObject {
   title: string
@@ -73,10 +73,12 @@ export type st = {
     status: string
     status_changed_at: string
     published_at: string
-  
-   
   }
   
-  
+export type APIToken = {
+    "token_type": string, "expires_in": number, "access_token": string
+}
+
+export type JWTType = { exp: number, aud: string, jti: string };
  
   
