@@ -20,7 +20,7 @@ export type AccessToken = {
 type JWTType = { exp: number, aud: string, jti: string};
 
 async function getPetfinderAccessToken(clientId: string, clientSecret: string) {
-    const url = 'https://api.petfinder.com/v2/oauth2/animals?type=Dog&gender=Male';
+    const url = 'https://api.petfinder.com/v2/oauth2/token';
 
     const data = new URLSearchParams({
         grant_type: 'client_credentials',
@@ -36,9 +36,9 @@ async function getPetfinderAccessToken(clientId: string, clientSecret: string) {
     const token: JWTType = jwtDecode<JWTType>(data_f.access_token)
 
     localStorage.setItem("expire", JSON.stringify(data_f.expires_in))
-    localStorage.setItem("fullToken", JSON.stringify(data_f.access_token))
-    localStorage.setItem('token', JSON.stringify(token))
-    localStorage.setItem('exp', JSON.stringify(token.exp))
+    localStorage.setItem("fullToken", data_f.access_token)
+   localStorage.setItem('token', JSON.stringify(token))
+   localStorage.setItem('exp', JSON.stringify(token.exp))
 
 }
 

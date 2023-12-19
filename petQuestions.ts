@@ -39,17 +39,16 @@ return "?"+quaryParameter[0][0] + "="+ quaryParameter[0][1]+
 
 
 let localStorage = new LocalStorage("./scratch");
-let grant = localStorage.getItem('token')
 
-//let grantkey = localStorage.getItem('key')
-//let grantaccess = `{ 'Authorization': 'Bearer ${grant}' }`
-let a = `https://api.petfinder.com/v2/`
+let grant = localStorage.getItem('fullToken')
 
-const headers = {
-    'Authorization':`Bearer ${grant}`,
+let a = `https://api.petfinder.com/v2/animals?type=Dog&gender=Male`
+
+const head = {
+    Authorization:`Bearer ${grant}`
   };
   
-fetch(a, {method: 'GET',headers: headers})
+fetch(a, {method: 'GET',headers: head})
   .then(a => a.json())
   .then(c => console.log(c))
 
