@@ -38,7 +38,7 @@ async function getPetfinderAccessToken(clientId: string, clientSecret: string) {
 
 }
 
-export async function sendReq() {
+export function sendReq() {
     const clientId = '9ZeAJ8bq9iRpaN5vGoXr7WJYfEMUm0Ir5jsdfTZqrTKSFWuT1Q';
     const clientSecret = 'EKCklXdaxkyEmCh6KWlpffC5KXWUhD7oim88Hwls';
 

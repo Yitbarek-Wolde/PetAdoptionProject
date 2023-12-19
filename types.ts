@@ -35,7 +35,20 @@ export interface BookTypeObject {
   title: string
   value: number
 }
+export type forKey = {
+    [key: string]: string }
 
+
+export type st = {
+    typed: string
+    named: string
+    breed: string
+    size: string
+    age: string
+    color: string | undefined
+    Status: string
+
+}
   export interface base {
     animal: Animal
   }

@@ -2,18 +2,8 @@ import prompts from "prompts";
 import fetch, { Response } from 'cross-fetch';
 import { sendReq, AccessToken, APIToken } from "./APIconnect";
 import { LocalStorage } from "node-localstorage";
-import { Root, Animal, pet, base, BookType, BookTypeObject } from "./types";
+import { Root, Animal, pet, base, BookType, BookTypeObject, st, forKey } from "./types";
 
-type st = {
-    typed: string
-    named: string
-    breed: string
-    size: string
-    age: string
-    color: string | undefined
-    Status: string
-
-}
 
 let localStorage = new LocalStorage("./scratch");
 async function getPets() {
@@ -58,23 +48,18 @@ async function getPets() {
 
 async function fetchAnimals() {
     try {
-        let time = Number(localStorage.getItem('exp'))
-        let now = Math.floor(Date.now() / 1000)
-        if (time < now) {
-            sendReq()
-        }
+        
         let getInput = await getPets()
         let grant = localStorage.getItem('fullToken')
         let a = `https://api.petfinder.com/v2/animals${getInput}`
-        const head = {
-            Authorization: `Bearer ${grant}`
-        };
+        const head = {Authorization: `Bearer ${grant}`};
 
         const response: Response = await fetch(a, { method: 'GET', headers: head })
         const data: Root = await response.json()
-        let collect = data.animals.map((a: Animal) => ({ title: a.name, value: a.id }))
+        //console.log(data)
+        let collect:{[id: string]: string}[] = data.animals.map((a: Animal) =>({[a.id]: a.name} ))
         localStorage.setItem('bookmark', JSON.stringify(collect))
-
+  
     }
     catch (error) {
         console.log(error)
@@ -83,17 +68,21 @@ async function fetchAnimals() {
 
 async function getPetsById() {
     await fetchAnimals()
-    let choice: BookType = JSON.parse(localStorage.getItem("bookmark") || "[]")
-    const userInput = await prompts(
+    let choice = JSON.parse(localStorage.getItem("bookmark") || "[]")
+    const choices = choice.map((item: forKey) => {
+        const key = Object.keys(item)[0];
+        return { title: item[key], value: parseInt(key) }
+    });
+    const userInput = await prompts([
         {
             type: "select",
             name: "type",
             message: "select animal type",
-            choices: choice
-        })
+            choices,
+        }])
     const quaryParameter = Object.entries(userInput)
     let quary:number = quaryParameter[0][1]
-        
+      //  console.log(quaryParameter)
     return quary
 }
 
@@ -153,8 +142,15 @@ async function Menu() {
         }
 
     ])
-    if (userInput.name === "1") 
+    if (userInput.name === "1") {
+        let time = Number(localStorage.getItem('exp'))
+        let now = Math.floor(Date.now() / 1000)
+        if (time < now) {
+           await sendReq()
+        }    
         await displayAnimal()
+    }
+    
     
     else if (userInput.name === "2") 
         displayBookmark()
