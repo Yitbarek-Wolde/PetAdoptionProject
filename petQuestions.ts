@@ -2,7 +2,7 @@ import prompts from "prompts";
 import fetch, { Response } from 'cross-fetch';
 import { sendReq, AccessToken, APIToken } from "./APIconnect";
 import { LocalStorage } from "node-localstorage";
-import { Root, Animal } from "./types";
+import { Root, Animal, pet, base } from "./types";
 
 
 let localStorage = new LocalStorage("./scratch");
@@ -64,7 +64,8 @@ async function fetchAnimals() {
         const response:Response = await fetch(a, { method: 'GET', headers: head })
         const data: Root = await response.json()
         let collect = data.animals.map((a: Animal) => ({ title: a.name, value: a.id }))
-        return collect
+        localStorage.setItem('bookmark', JSON.stringify(collect))
+        
     }
     catch (error) {
         console.log(error)
@@ -72,7 +73,8 @@ async function fetchAnimals() {
 }
 
 async function getPetsById() {
-    let choice = await fetchAnimals()
+    await fetchAnimals()
+    let choice = JSON.parse(localStorage.getItem("bookmark") || "[]") 
     const userInput = await prompts([
         {
             type: "select",
@@ -96,9 +98,23 @@ async function fetchAnimalsById() {
     };
 
     const response:Response = await fetch(a, { method: 'GET', headers: head })
-    const data: Animal = await response.json()
-    console.log(data.name, data.breeds, data.size, data.age, data.colors, data.status)
-
+    const data:pet = await response.json()
+  
+    localStorage.setItem('SelectedAnimal', JSON.stringify(data))
 }
 
-fetchAnimalsById()
+async function displayAnimal(){
+   await fetchAnimalsById() 
+   let data:base = JSON.parse(localStorage.getItem("SelectedAnimal") || '{}')
+    console.log(`
+Here is your ${data.animal.type} details
+    Name : ${data.animal.name} 
+    Breed : ${data.animal.breeds.primary }
+    Size : ${data.animal.size }
+    Age : ${data.animal.age}
+    Color: ${data.animal.colors.primary }
+    Status : ${data.animal.status}`)
+   
+}
+
+displayAnimal()
