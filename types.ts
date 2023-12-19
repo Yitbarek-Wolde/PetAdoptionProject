@@ -40,6 +40,7 @@ export type forKey = {
 
 
 export type st = {
+    id:number,
     typed: string
     named: string
     breed: string

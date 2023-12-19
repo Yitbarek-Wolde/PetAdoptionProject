@@ -48,18 +48,18 @@ async function getPets() {
 
 async function fetchAnimals() {
     try {
-        
+
         let getInput = await getPets()
         let grant = localStorage.getItem('fullToken')
         let a = `https://api.petfinder.com/v2/animals${getInput}`
-        const head = {Authorization: `Bearer ${grant}`};
+        const head = { Authorization: `Bearer ${grant}` };
 
         const response: Response = await fetch(a, { method: 'GET', headers: head })
         const data: Root = await response.json()
         //console.log(data)
-        let collect:{[id: string]: string}[] = data.animals.map((a: Animal) =>({[a.id]: a.name} ))
+        let collect: { [id: string]: string }[] = data.animals.map((a: Animal) => ({ [a.id]: a.name }))
         localStorage.setItem('tempo', JSON.stringify(collect))
-  
+
     }
     catch (error) {
         console.log(error)
@@ -81,8 +81,8 @@ async function getPetsById() {
             choices,
         }])
     const quaryParameter = Object.entries(userInput)
-    let quary:number = quaryParameter[0][1]
-      //  console.log(quaryParameter)
+    let quary: number = quaryParameter[0][1]
+    //  console.log(quaryParameter)
     return quary
 }
 
@@ -94,18 +94,19 @@ async function fetchAnimalsById() {
     const head = {
         Authorization: `Bearer ${grant}`
     };
- const response:Response = await fetch(a, { method: 'GET', headers: head })
-    const data:base = await response.json()
+    const response: Response = await fetch(a, { method: 'GET', headers: head })
+    const data: base = await response.json()
     localStorage.setItem('fullRes', JSON.stringify(data))
     let store: st[] = [];
     store.push({
-      typed: data.animal.name,
-      named: data.animal.name,
-      breed: data.animal.breeds.primary,
-      size: data.animal.size,
-      age: data.animal.age,
-      color: data.animal.colors.primary,
-      Status: data.animal.status,
+        id: data.animal.id,
+        typed: data.animal.name,
+        named: data.animal.name,
+        breed: data.animal.breeds.primary,
+        size: data.animal.size,
+        age: data.animal.age,
+        color: data.animal.colors.primary,
+        Status: data.animal.status,
     })
 
     localStorage.setItem('SelectedAnimal', JSON.stringify(store))
@@ -122,14 +123,61 @@ async function displayAnimal() {
         Age : ${data.age}
         Color: ${data.color}
         Status : ${data.Status}`))
+
+    displayBookmark()
 }
 
-function displayBookmark() {
-    let saved: BookType = JSON.parse(localStorage.getItem("bookmark") || "[]")
-    if (!saved)
-        console.log('Bookmark empty')
-    else
-        saved.forEach((s: BookTypeObject) => console.log(s))
+function saveBookMark() {
+    let saved: { [id: string]: string }[] = JSON.parse(localStorage.getItem("Bookmark") || "[]")
+
+    let add: st[] = JSON.parse(localStorage.getItem("SelectedAnimal") || '[]')
+
+    saved.push({ [add[0].id]: add[0].named });
+    localStorage.setItem('Bookmark', JSON.stringify(saved))
+
+
+}
+
+function deleteFromBookmark(id: string) {
+    let saved: { [id: string]: string }[] = JSON.parse(localStorage.getItem("Bookmark") || "[]");
+    if (saved.some(bookmark => bookmark[id])) {
+        saved = saved.filter(bookmark => !bookmark[id]);
+        localStorage.setItem('Bookmark', JSON.stringify(saved));
+        console.log('Deleted Sucessfully!')
+    } else
+        console.log(`id ${id} not foun in bookmark!`)
+}
+
+
+async function displayBookmark() {
+    const userInput = await prompts([
+        {
+            type: "text",
+            name: "name",
+            message: "Press 1 to bookmark pet or 2 to view bookmark or 3 to delete from bookmark or any key to go to menu",
+        }
+
+    ])
+    let saved: { [id: string]: string }[] = JSON.parse(localStorage.getItem("Bookmark") || "[]")
+    if (userInput.name === "1") {
+        saveBookMark()
+    }
+
+    if (userInput.name === "2") {
+        console.log("Here are the list of your bookmarks")
+        saved.forEach((s: { [id: string]: string }) => console.log(s))
+
+    }
+    if (userInput.name === "3") {
+        saved.forEach((s: { [id: string]: string }) => console.log(s))
+        const id = await prompts([
+            {
+                type: "text",
+                name: "name",
+                message: "Enter pet id to delete",
+            }])
+        deleteFromBookmark(id.name)
+    }
 }
 
 async function Menu() {
@@ -146,20 +194,20 @@ async function Menu() {
         let time = Number(localStorage.getItem('exp'))
         let now = Math.floor(Date.now() / 1000)
         if (time < now) {
-           await sendReq()
-        }    
+            await sendReq()
+        }
         await displayAnimal()
     }
-    
-    
-    else if (userInput.name === "2") 
-        displayBookmark()
 
-     else {
+
+    else if (userInput.name === "2")
+        await displayBookmark()
+
+    else {
         console.log("Exiting...");
         return
     }
-   
+
     Menu()
 }
 Menu()
