@@ -29,6 +29,12 @@ export type Root = {
     tertiary: any
   }
   
+  export type BookType = BookTypeObject[]
+
+export interface BookTypeObject {
+  title: string
+  value: number
+}
 
   export interface base {
     animal: Animal

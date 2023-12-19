@@ -2,10 +2,10 @@ import prompts from "prompts";
 import fetch, { Response } from 'cross-fetch';
 import { sendReq, AccessToken, APIToken } from "./APIconnect";
 import { LocalStorage } from "node-localstorage";
-import { Root, Animal, pet, base } from "./types";
+import { Root, Animal, pet, base, BookType, BookTypeObject } from "./types";
 
 type st ={
-    type: string
+    typed: string | undefined
     named: string
    breed: string
     size:  string
@@ -84,7 +84,7 @@ async function fetchAnimals() {
 
 async function getPetsById() {
     await fetchAnimals()
-    let choice = JSON.parse(localStorage.getItem("bookmark") || "[]") 
+    let choice:BookType = JSON.parse(localStorage.getItem("bookmark") || "[]") 
     const userInput = await prompts([
         {
             type: "select",
@@ -92,10 +92,10 @@ async function getPetsById() {
             message: "select animal type",
             choices: choice
         }])
-    const quaryParameter = Object.entries(userInput)
+    const quaryParameter:BookType[] = Object.entries(userInput)
     let quary = quaryParameter[0][1]
 
-    return quary
+    return quary.value
 }
 
 async function fetchAnimalsById() {
@@ -108,12 +108,9 @@ async function fetchAnimalsById() {
     };
  const response:Response = await fetch(a, { method: 'GET', headers: head })
     const data:base = await response.json()
-    
-
-   
     let store: st[] = [];
     store.push({
-      type: data.animal.type,
+      typed: data.animal.type,
       named: data.animal.name,
       breed: data.animal.breeds.primary,
       size: data.animal.size,
@@ -129,7 +126,7 @@ async function displayAnimal(){
    await fetchAnimalsById() 
    let dataf:st[] = JSON.parse(localStorage.getItem("SelectedAnimal") || '[]')
     dataf.forEach(data=>console.log(`
-Here is your ${data.type} details
+Here is your ${data.typed} details
     Name : ${data.named} 
     Breed : ${data.breed }
     Size : ${data.size }
@@ -139,4 +136,32 @@ Here is your ${data.type} details
    
 }
 
-displayAnimal()
+function displayBookmark(){
+    let saved:BookType = JSON.parse(localStorage.getItem("bookmark") || "[]") 
+    if(!saved)
+        console.log('Bookmark empty')
+    else
+        saved.forEach((s:BookTypeObject)=> console.log(s))
+}
+
+async function Menu() {
+    const userInput = await prompts([
+        {
+            type: "text",
+            name: "name",
+            message: "Enter 1 to find new Pet or 2 to see bookmark list or 3 to Exit ",
+            validate: (value: string) => (value !== "1" && value !== "2" && value !== "3") ? "Please enter either 1 or 2" : true,
+        }
+    
+    ])
+    if (userInput.name === "1") {
+       await displayAnimal()
+      } else if (userInput.name === "2") {
+        displayBookmark()
+      } else if (userInput.name === "3") {
+        console.log("Exiting...");
+        return
+      }
+    Menu()
+    }
+Menu()
