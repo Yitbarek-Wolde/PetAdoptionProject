@@ -58,7 +58,7 @@ async function fetchAnimals() {
         const data: Root = await response.json()
         //console.log(data)
         let collect:{[id: string]: string}[] = data.animals.map((a: Animal) =>({[a.id]: a.name} ))
-        localStorage.setItem('bookmark', JSON.stringify(collect))
+        localStorage.setItem('tempo', JSON.stringify(collect))
   
     }
     catch (error) {
@@ -68,7 +68,7 @@ async function fetchAnimals() {
 
 async function getPetsById() {
     await fetchAnimals()
-    let choice = JSON.parse(localStorage.getItem("bookmark") || "[]")
+    let choice = JSON.parse(localStorage.getItem("tempo") || "[]")
     const choices = choice.map((item: forKey) => {
         const key = Object.keys(item)[0];
         return { title: item[key], value: parseInt(key) }
