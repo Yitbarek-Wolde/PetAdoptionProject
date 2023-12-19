@@ -1,7 +1,8 @@
 import { jwtDecode } from "jwt-decode";
 import fetch, { Response } from 'cross-fetch';
+import { LocalStorage } from "node-localstorage";
 
-type APIToken = {"token_type": string, "expires_in": number, "access_token": string 
+export type APIToken = {"token_type": string, "expires_in": number, "access_token": string 
   }
     
 export type AccessToken= {
@@ -15,7 +16,7 @@ export type AccessToken= {
       
   }
   
-  async function getPetfinderAccessToken(clientId: string, clientSecret: string): Promise<AccessToken> {
+  async function getPetfinderAccessToken(clientId: string, clientSecret: string) {
     const url = 'https://api.petfinder.com/v2/oauth2/token';
   
     const data = new URLSearchParams({
@@ -23,22 +24,23 @@ export type AccessToken= {
       client_id: clientId,
       client_secret: clientSecret,
     });
-  
+
+    let localStorage = new LocalStorage("./scratch");
 
     const response: Response = await fetch(url, {method: 'POST',body: data})
 
     const data_f:APIToken = await response.json()
+    localStorage.setItem("access",JSON.stringify(data_f.access_token))
     const token:AccessToken = jwtDecode(data_f.access_token)
-    
-    return token
+    localStorage.setItem('exp', JSON.stringify(token.exp))
+
   }
 
  export async function sendReq() {
     const clientId = '9ZeAJ8bq9iRpaN5vGoXr7WJYfEMUm0Ir5jsdfTZqrTKSFWuT1Q';
     const clientSecret = 'EKCklXdaxkyEmCh6KWlpffC5KXWUhD7oim88Hwls';
   
-    const token = await getPetfinderAccessToken(clientId, clientSecret);
-   return token
+    getPetfinderAccessToken(clientId, clientSecret);
   }
   
  //check

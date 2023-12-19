@@ -1,5 +1,6 @@
 import prompts from "prompts";
-import { sendReq, AccessToken } from "./APIconnect";
+import { jwtDecode } from "jwt-decode";
+import { sendReq, AccessToken, APIToken } from "./APIconnect";
 import { LocalStorage } from "node-localstorage";
 
 async function getPets() {
@@ -30,19 +31,13 @@ const userInput= await prompts ([
 ])
 
 const quaryParameter=  Object.entries(userInput)   
-
-console.log("?"+quaryParameter[0][0] + "="+ quaryParameter[0][1]+
+return "?"+quaryParameter[0][0] + "="+ quaryParameter[0][1]+
 "&"+quaryParameter[1][0]+"="+quaryParameter[1][1]+"&"+quaryParameter[2][0]+"="+quaryParameter[2][1]
-)
+
 }
 
-let localStorage = new LocalStorage("./scratch"); //scratch folder store it in that fold all files
-let access: AccessToken;
-let storeAccess;
+let grant = localStorage.getItem('access')
+let grantkey = localStorage.getItem('key')
+let grantaccess = `{ 'Authorization': 'Bearer ${grant}' }`
 
-async function storeToLocal(){
-let c = await sendReq();
- access = c
- storeAccess = localStorage.setItem("access",JSON.stringify(access))
-}
-storeToLocal()
+fetch(`https://api.petfinder.com/v2/animals${getPets()}`, {method: 'GET'})
