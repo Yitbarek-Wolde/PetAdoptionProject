@@ -29,18 +29,6 @@ async function getPets() {
                 { title: "Male", value: "Male" },
                 { title: "Female", value: "Female" }
             ]
-        },
-        {
-            type: 'autocomplete',
-            name: 'value',
-            message: 'Pick your favorite actor',
-            choices: [
-                { title: 'Cage' },
-                { title: 'Clooney', value: 'silver-fox' },
-                { title: 'Gyllenhaal' },
-                { title: 'Gibson' },
-                { title: 'Grant' }
-            ]
         }
     ])
 
@@ -73,11 +61,42 @@ async function fetchAnimals() {
 
         const response = await fetch(a, { method: 'GET', headers: head })
         const data:Root = await response.json()
-        console.log(data.animals.map((a: Animal) => a.name))
+        let collect = data.animals.map((a: Animal) => ({title: a.name, value: a.id}))
+        return collect
     }
     catch (error) {
         console.log(error)
     }
 }
 
-fetchAnimals()
+async function getPetsById() {
+    let choice = await fetchAnimals()
+    const userInput = await prompts([
+        {
+            type: "select",
+            name: "type",
+            message: "select animal type",
+            choices: choice
+        }])
+        const quaryParameter = Object.entries(userInput)
+   let quary = quaryParameter[0][1]
+  
+    return quary
+    }
+
+    async function fetchAnimalsById() {
+        
+    let getInput = await getPetsById()
+            let grant = localStorage.getItem('fullToken')
+            let a = `https://api.petfinder.com/v2/animals/${getInput}`
+            const head = {
+                Authorization: `Bearer ${grant}`
+            };
+    
+            const response = await fetch(a, { method: 'GET', headers: head })
+            const data:Animal = await response.json()
+            console.log(data)
+        
+    }
+
+    fetchAnimalsById()
