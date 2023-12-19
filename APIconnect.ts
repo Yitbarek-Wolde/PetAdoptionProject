@@ -34,10 +34,7 @@ async function getPetfinderAccessToken(clientId: string, clientSecret: string) {
 
     const data_f: APIToken = await response.json()
     const token: JWTType = jwtDecode<JWTType>(data_f.access_token)
-
-    localStorage.setItem("expire", JSON.stringify(data_f.expires_in))
     localStorage.setItem("fullToken", data_f.access_token)
-   localStorage.setItem('token', JSON.stringify(token))
    localStorage.setItem('exp', JSON.stringify(token.exp))
 
 }
@@ -49,4 +46,3 @@ export async function sendReq() {
     getPetfinderAccessToken(clientId, clientSecret);
 }
 
-//check
