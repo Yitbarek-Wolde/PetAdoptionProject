@@ -2,6 +2,7 @@ import prompts from "prompts";
 import { jwtDecode } from "jwt-decode";
 import { sendReq, AccessToken, APIToken } from "./APIconnect";
 import { LocalStorage } from "node-localstorage";
+import { send } from "process";
 
 async function getPets() {
 const userInput= await prompts ([
@@ -36,8 +37,19 @@ return "?"+quaryParameter[0][0] + "="+ quaryParameter[0][1]+
 
 }
 
-let grant = localStorage.getItem('access')
-let grantkey = localStorage.getItem('key')
-let grantaccess = `{ 'Authorization': 'Bearer ${grant}' }`
 
-fetch(`https://api.petfinder.com/v2/animals${getPets()}`, {method: 'GET'})
+let localStorage = new LocalStorage("./scratch");
+let grant = localStorage.getItem('token')
+
+//let grantkey = localStorage.getItem('key')
+//let grantaccess = `{ 'Authorization': 'Bearer ${grant}' }`
+let a = `https://api.petfinder.com/v2/`
+
+const headers = {
+    'Authorization':`Bearer ${grant}`,
+  };
+  
+fetch(a, {method: 'GET',headers: headers})
+  .then(a => a.json())
+  .then(c => console.log(c))
+
