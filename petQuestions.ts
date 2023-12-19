@@ -145,7 +145,7 @@ function deleteFromBookmark(id: string) {
         localStorage.setItem('Bookmark', JSON.stringify(saved));
         console.log('Deleted Sucessfully!')
     } else
-        console.log(`id ${id} not foun in bookmark!`)
+        console.log(`id ${id} not found in bookmark!`)
 }
 
 
