@@ -64,7 +64,7 @@ async function fetchAnimals() {
 
     }
     catch (error) {
-        console.log(error)
+       // console.log(error)
         console.log(`Handling error...`)
         console.log(`Redirecting... Stay calm`)
       
@@ -94,7 +94,7 @@ async function getPetsById() {
 
     return quary
     }catch(error){
-        console.log(error)
+        //console.log(error)
        // Menu()
     }
 }
@@ -124,10 +124,10 @@ try{
 
     localStorage.setItem('SelectedAnimal', JSON.stringify(store))
 }catch(error){
-    console.error(error)
+    //console.error(error)
     console.log(`Handling error...`)
     console.log(`Redirecting... Stay calm`)
-    Menu()
+   // Menu()
 }
 }
 async function displayAnimal() {
