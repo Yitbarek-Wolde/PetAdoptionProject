@@ -1,6 +1,6 @@
 import prompts from "prompts";
 import fetch, { Response } from 'cross-fetch';
-import { sendReq} from "./APIconnect";
+import { sendRequest} from "./APIconnect";
 import { LocalStorage } from "node-localstorage";
 import { Root, Animal, base, st, forKey } from "./types";
 
@@ -58,22 +58,26 @@ async function fetchAnimals() {
 
         const response: Response = await fetch(a, { method: 'GET', headers: head })
         const data: Root = await response.json()
-        //console.log(data)
+
         let collect: { [id: string]: string }[] = data.animals.map((a: Animal) => ({ [a.id]: a.name }))
         localStorage.setItem('tempo', JSON.stringify(collect))
 
     }
     catch (error) {
         console.log(error)
+        console.log(`Handling error...`)
         console.log(`Redirecting... Stay calm`)
-        Menu()
+      
     }
 }
 
 async function getPetsById() {
+   
     try{
     await fetchAnimals()
     let choice: {[id:string]:string}[] = JSON.parse(localStorage.getItem("tempo") || "[]")
+    if(!choice[0]){
+       await Menu()}
     const choices = choice.map((item: forKey) => {
         const key = Object.keys(item)[0];
         return { title: item[key], value: parseInt(key) }
@@ -87,12 +91,11 @@ async function getPetsById() {
         }])
     const quaryParameter:[string, number][]  = Object.entries(userInput)
     let quary: number = quaryParameter[0][1]
-   console.log(quaryParameter)
-   console.log(quary)
+
     return quary
     }catch(error){
         console.log(error)
-        Menu()
+       // Menu()
     }
 }
 
@@ -122,6 +125,7 @@ try{
     localStorage.setItem('SelectedAnimal', JSON.stringify(store))
 }catch(error){
     console.error(error)
+    console.log(`Handling error...`)
     console.log(`Redirecting... Stay calm`)
     Menu()
 }
@@ -205,7 +209,7 @@ export async function Menu() {
         let time = Number(localStorage.getItem('exp'))
         let now = Math.floor(Date.now() / 1000)
         if (time < now) {
-            await sendReq()
+            await sendRequest()
             }
         await displayAnimal()
     }
@@ -222,3 +226,4 @@ export async function Menu() {
     Menu()
 }
 Menu()
+

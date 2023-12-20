@@ -19,19 +19,19 @@ async function getPetfinderAccessToken(clientId: string, clientSecret: string) {
     let localStorage = new LocalStorage("./scratch");
 
     const response: Response = await fetch(url, { method: 'POST', body: data })
-    const data_f: APIToken = await response.json()
-    const token: JWTType = jwtDecode<JWTType>(data_f.access_token)
-    localStorage.setItem("fullToken", data_f.access_token)
+    const data_recived: APIToken = await response.json()
+    const token: JWTType = jwtDecode<JWTType>(data_recived.access_token)
+    localStorage.setItem("fullToken", data_recived.access_token)
     localStorage.setItem('exp', JSON.stringify(token.exp))
 }catch(error){
     console.log(error)
         console.log(`Redirecting... Stay calm`)
-        sendReq()
+        sendRequest()
 }
 
 }
 
-export function sendReq() {
+export function sendRequest() {
     const clientId = '9ZeAJ8bq9iRpaN5vGoXr7WJYfEMUm0Ir5jsdfTZqrTKSFWuT1Q';
     const clientSecret = 'EKCklXdaxkyEmCh6KWlpffC5KXWUhD7oim88Hwls';
 
