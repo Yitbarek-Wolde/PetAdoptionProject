@@ -65,10 +65,13 @@ async function fetchAnimals() {
     }
     catch (error) {
         console.log(error)
+        console.log(`Redirecting... Stay calm`)
+        Menu()
     }
 }
 
 async function getPetsById() {
+    try{
     await fetchAnimals()
     let choice: {[id:string]:string}[] = JSON.parse(localStorage.getItem("tempo") || "[]")
     const choices = choice.map((item: forKey) => {
@@ -84,12 +87,17 @@ async function getPetsById() {
         }])
     const quaryParameter:[string, number][]  = Object.entries(userInput)
     let quary: number = quaryParameter[0][1]
-   
+   console.log(quaryParameter)
+   console.log(quary)
     return quary
+    }catch(error){
+        console.log(error)
+        Menu()
+    }
 }
 
 async function fetchAnimalsById() {
-
+try{
     let getInput = await getPetsById()
     let grant = localStorage.getItem('fullToken')
     let a = `https://api.petfinder.com/v2/animals/${getInput}`
@@ -98,7 +106,7 @@ async function fetchAnimalsById() {
     };
     const response: Response = await fetch(a, { method: 'GET', headers: head })
     const data: base = await response.json()
-    localStorage.setItem('fullRes', JSON.stringify(data))
+  //  localStorage.setItem('fullRes', JSON.stringify(data))
     let store: st[] = [];
     store.push({
         id: data.animal.id,
@@ -112,8 +120,12 @@ async function fetchAnimalsById() {
     })
 
     localStorage.setItem('SelectedAnimal', JSON.stringify(store))
+}catch(error){
+    console.error(error)
+    console.log(`Redirecting... Stay calm`)
+    Menu()
 }
-
+}
 async function displayAnimal() {
     await fetchAnimalsById()
     let dataf: st[] = JSON.parse(localStorage.getItem("SelectedAnimal") || '[]')
@@ -126,7 +138,7 @@ async function displayAnimal() {
         Color: ${data.color}
         Status : ${data.Status}`))
 
-    displayBookmark()
+    await displayBookmark()
 }
 
 function saveBookMark() {
@@ -187,15 +199,14 @@ export async function Menu() {
             name: "name",
             message: "Enter 1 to find new Pet or 2 to see bookmark list or 3 to Exit ",
             validate: (value: string) => (value !== "1" && value !== "2" && value !== "3") ? "Please enter either 1 or 2" : true,
-        }
+        }])
 
-    ])
     if (userInput.name === "1") {
         let time = Number(localStorage.getItem('exp'))
         let now = Math.floor(Date.now() / 1000)
         if (time < now) {
             await sendReq()
-        }
+            }
         await displayAnimal()
     }
 

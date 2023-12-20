@@ -7,6 +7,7 @@ import { APIToken, JWTType} from "./types";
 
 
 async function getPetfinderAccessToken(clientId: string, clientSecret: string) {
+   try{
     const url = 'https://api.petfinder.com/v2/oauth2/token';
 
     const data = new URLSearchParams({
@@ -22,6 +23,11 @@ async function getPetfinderAccessToken(clientId: string, clientSecret: string) {
     const token: JWTType = jwtDecode<JWTType>(data_f.access_token)
     localStorage.setItem("fullToken", data_f.access_token)
     localStorage.setItem('exp', JSON.stringify(token.exp))
+}catch(error){
+    console.log(error)
+        console.log(`Redirecting... Stay calm`)
+        sendReq()
+}
 
 }
 
