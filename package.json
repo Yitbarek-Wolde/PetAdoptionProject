@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "nodemon test.ts",
-    "api": "nodemon APIconnect.ts",
+    "app": "node app.ts",
     "check": "nodemon check.ts",
     "pet": "nodemon petQuestions.ts"
   },

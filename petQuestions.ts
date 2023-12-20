@@ -2,10 +2,12 @@ import prompts from "prompts";
 import fetch, { Response } from 'cross-fetch';
 import { sendReq} from "./APIconnect";
 import { LocalStorage } from "node-localstorage";
-import { Root, Animal, pet, base, BookType, BookTypeObject, st, forKey } from "./types";
+import { Root, Animal, base, st, forKey } from "./types";
+
 
 
 let localStorage = new LocalStorage("./scratch");
+
 async function getPets() {
     const userInput = await prompts([
         {
@@ -129,12 +131,10 @@ async function displayAnimal() {
 
 function saveBookMark() {
     let saved: { [id: string]: string }[] = JSON.parse(localStorage.getItem("Bookmark") || "[]")
-
     let add: st[] = JSON.parse(localStorage.getItem("SelectedAnimal") || '[]')
-
     saved.push({ [add[0].id]: add[0].named });
     localStorage.setItem('Bookmark', JSON.stringify(saved))
-
+    console.log('Saved Sucessfully!')
 
 }
 
@@ -180,7 +180,7 @@ async function displayBookmark() {
     }
 }
 
-async function Menu() {
+export async function Menu() {
     const userInput = await prompts([
         {
             type: "text",
