@@ -227,3 +227,5 @@ export async function Menu() {
 }
 Menu()
 
+//to run this code
+//npm run pet
