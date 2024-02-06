@@ -4,16 +4,10 @@
   "description": "[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/JJjrD2Wy)\r # SD500-Final-Project-PetFinder-API\r The project repository should be \"Accepted/Forked\" by team leaders only. One team member (team leader) will add their team members as \"collaborators\" so they could collaborate and push their daily progress.",
   "main": "index.js",
   "scripts": {
-<<<<<<< HEAD
-    "api": "nodemon APIconnect.ts",
-    "check": "nodemon check.ts",
-    "test": "nodemon test.ts"
-=======
     "test": "nodemon test.ts",
     "app": "node app.ts",
     "check": "nodemon check.ts",
     "pet": "nodemon petQuestions.ts"
->>>>>>> b54a292e55b7b902ecdba46d628faba664f94221
   },
   "author": "",
   "license": "ISC",
